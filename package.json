@@ -1,0 +1,13 @@
+{
+  "name": "social-trends-radar",
+  "version": "1.0.0",
+  "description": "Daily social media trend radar for Forceget — searches LinkedIn, Instagram, Facebook, and YouTube for high-engagement posts across target topics and builds a visual house-style dashboard.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node src/index.mjs"
+  },
+  "dependencies": {
+    "apify-client": "^2.9.3"
+  }
+}

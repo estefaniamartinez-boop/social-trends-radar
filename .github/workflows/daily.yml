@@ -1,0 +1,46 @@
+name: Daily Social Trend Radar
+
+on:
+  schedule:
+    - cron: '0 11 * * *'   # 11:00 UTC ≈ 7:00 AM US Eastern — adjust to your timezone
+  workflow_dispatch: {}     # lets you trigger a run manually from the Actions tab
+
+permissions:
+  contents: write           # needed to publish to the gh-pages branch
+
+concurrency:
+  group: trend-radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run the radar
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          # Optional actor overrides (only set if you swap an actor):
+          ACTOR_LINKEDIN: ${{ secrets.ACTOR_LINKEDIN }}
+          ACTOR_INSTAGRAM: ${{ secrets.ACTOR_INSTAGRAM }}
+          ACTOR_FACEBOOK: ${{ secrets.ACTOR_FACEBOOK }}
+          ACTOR_YOUTUBE: ${{ secrets.ACTOR_YOUTUBE }}
+          TOP_N: '3'
+          MAX_AGE_DAYS: '14'
+        run: npm start
+
+      - name: Publish dashboard to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          keep_files: true    # keeps historical /data and /cards from prior runs

@@ -1,0 +1,7 @@
+node_modules/
+output/
+public/cards/
+public/data/
+public/index.html
+*.log
+.DS_Store
