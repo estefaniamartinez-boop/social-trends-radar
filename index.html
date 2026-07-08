@@ -1,0 +1,448 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Forceget · Trend Radar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0D1726;--purple:#5850EB;--red:#FA5959;--yellow:#FFC118;--teal:#0E9C9C}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',system-ui,sans-serif;background:#F7F8FC;color:#12203a;-webkit-font-smoothing:antialiased}
+  h1,h2,.tr-eyebrow,.tr-pgroup{font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+  .tr-hero{background:radial-gradient(120% 140% at 100% 0%,#1b2a44 0%,#0D1726 55%);color:#fff;padding:48px 40px 36px}
+  .tr-hero h1{font-size:clamp(30px,4vw,48px);font-weight:800;line-height:1.05;max-width:16ch}
+  .tr-hero h1 em{color:#FA5959;font-style:normal}
+  .tr-hero p{opacity:.82;margin-top:14px;font-size:16px;max-width:60ch}
+  .tr-meta{margin-top:18px;font-size:13px;opacity:.7;letter-spacing:.02em}
+  .tr-banner{background:#eef0fb;border-bottom:1px solid #e0e3f5;padding:10px 40px;font-size:13px;color:#3a2a5a}
+  .tr-controls{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e7e9f3;padding:14px 40px;box-shadow:0 2px 10px rgba(13,23,38,.05)}
+  .tr-pills{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .tr-pgroup{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#8a93ab;font-weight:700;margin:0 4px 0 2px}
+  .tr-pdiv{width:1px;height:22px;background:#e0e3f0;margin:0 6px}
+  .tr-pill,.tr-cpill{border:1px solid #dfe3ee;background:#fff;border-radius:999px;padding:7px 14px;font:600 13px 'DM Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:7px;color:#33415c}
+  .tr-pill i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .tr-pill b{color:#8a93ab;font-weight:700}
+  .tr-pill.on{background:#5850EB;color:#fff;border-color:#5850EB}.tr-pill.on b{color:#dfe0ff}
+  .tr-cpill.on{background:#0D1726;color:#fff;border-color:#0D1726}
+  .tr-chanrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  main{max-width:1360px;margin:0 auto;padding:12px 40px 72px}
+  .tr-topic{margin-top:34px}
+  .tr-topic h2{font-size:19px;color:var(--tc);border-bottom:2px solid #e9ebf5;padding-bottom:8px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .tr-topic h2 span{font-size:12px;background:var(--tc);color:#fff;border-radius:999px;padding:2px 9px}
+  .tr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .tr-card{background:#fff;border:1px solid #eceef6;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 3px 14px rgba(13,23,38,.06);transition:transform .15s,box-shadow .15s}
+  .tr-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(13,23,38,.11)}
+  .tr-visual{position:relative;aspect-ratio:16/10;background:#eef0f6;overflow:hidden}
+  .tr-visual img{width:100%;height:100%;object-fit:cover;display:block}
+  .tr-visual.tile{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0D1726 0%,#26365a 100%)}
+  .tr-visual.tile::after{content:attr(data-type) ' · preview unavailable';position:absolute;bottom:10px;left:12px;font-size:11px;color:#c7cfe0;opacity:.8}
+  .tr-visual.tile .tr-typebadge{position:static;font-size:22px;font-weight:800;color:#fff;background:none;letter-spacing:.03em}
+  .tr-typebadge{position:absolute;top:10px;left:10px;background:rgba(13,23,38,.78);color:#fff;font-size:10px;font-weight:700;letter-spacing:.05em;padding:4px 9px;border-radius:6px}
+  .tr-body{padding:15px 16px 16px;display:flex;flex-direction:column;gap:9px;flex:1}
+  .tr-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .tr-eyebrow{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--tc)}
+  .tr-chip{font-size:10px;font-weight:700;color:#fff;padding:3px 9px;border-radius:999px}
+  .tr-acct{font-weight:700;font-size:14px;color:#16233d}
+  .tr-cr{font-weight:500;color:#8a93ab;font-size:12px}
+  .tr-snip{font-size:13.5px;line-height:1.5;color:#39445c;flex:1}
+  .tr-star{color:#FFC118}
+  .tr-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:11px;color:#8a93ab}
+  .tr-found{background:#f0ecfb;color:#5850EB;font-weight:700;padding:3px 8px;border-radius:6px}
+  .tr-open{margin-top:4px;color:#5850EB;font-weight:700;font-size:13px;text-decoration:none}
+  .tr-open:hover{text-decoration:underline}
+  .tr-gap{grid-column:1/-1;border:1px dashed #cfd5e6;border-radius:12px;padding:18px;color:#98a1b6;font-style:italic;font-size:14px}
+  footer{text-align:center;padding:34px;color:#8a93ab;font-size:12px;line-height:1.6}
+  a{color:inherit}
+  @media (max-width:600px){.tr-hero,.tr-controls,.tr-banner,main{padding-left:20px;padding-right:20px}}
+</style></head><body>
+<header class="tr-hero">
+  <h1>What others are <em>posting</em> about our topics</h1>
+  <p>A daily radar of real Instagram, Facebook, LinkedIn &amp; YouTube posts across Forceget's 9 tracked topics — ranked by public engagement, so the team can see what's landing and replicate it.</p>
+  <div class="tr-meta">25 posts · 9 topics · Updated 2026-07-08</div>
+</header>
+<div class="tr-banner">Most recent post: 2026-07-08 · cargologisticsarmenia · auto-refreshes daily</div>
+<div class="tr-controls">
+  <div class="tr-pills"><button class="tr-pill on" data-topic="all"><i style="background:#8a93ab"></i>All <b>25</b></button><span class="tr-pgroup">Core</span><button class="tr-pill" data-topic="dtc-fulfillment"><i style="background:#5850EB"></i>DTC Fulfillment <b>6</b></button><button class="tr-pill" data-topic="instant-quotation"><i style="background:#0E9C9C"></i>Instant Shipping Quotation <b>7</b></button><button class="tr-pill" data-topic="amazon-fba"><i style="background:#FA5959"></i>Amazon FBA Shipping &amp; Fulfillment <b>6</b></button><button class="tr-pill" data-topic="amazon-1p-recovery"><i style="background:#FFC118"></i>Amazon Vendor / 1P Revenue Recovery <b>6</b></button><button class="tr-pill" data-topic="supply-chain-trends"><i style="background:#5850EB"></i>Ecommerce B2B &amp; DTC Supply-Chain Trends <b>0</b></button><span class="tr-pdiv"></span><span class="tr-pgroup">Launches &amp; Web</span><button class="tr-pill" data-topic="new-product-launch"><i style="background:#0E9C9C"></i>New Product Launch <b>0</b></button><button class="tr-pill" data-topic="new-feature-launch"><i style="background:#FA5959"></i>New Feature Launch <b>0</b></button><button class="tr-pill" data-topic="new-website-design"><i style="background:#5850EB"></i>New Website Design <b>0</b></button><button class="tr-pill" data-topic="new-website-launch"><i style="background:#0E9C9C"></i>New Website Launch <b>0</b></button></div>
+  <div class="tr-chanrow"><button class="tr-cpill on" data-ch="all">All channels</button><button class="tr-cpill" data-ch="linkedin">LinkedIn</button><button class="tr-cpill" data-ch="instagram">Instagram</button><button class="tr-cpill" data-ch="facebook">Facebook</button><button class="tr-cpill" data-ch="youtube">YouTube</button></div>
+</div>
+<main>
+    <section class="tr-topic" data-topic="dtc-fulfillment">
+      <h2 style="--tc:#5850EB">DTC Fulfillment <span>6</span></h2>
+      <div class="tr-grid">
+        <article class="tr-card" data-topic="dtc-fulfillment" data-ch="youtube" style="--tc:#5850EB">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/oiU-ippebC0/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">DTC Fulfillment</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">Maersk</div>
+      <p class="tr-snip"><span class="tr-star">★</span> How Maersk is helping Chinese e-commerce adapt to new EU regulations</p>
+      <div class="tr-foot"><span class="tr-found">found via: dtc fulfillment</span><span class="tr-date">posted 2026-06-29 · 9 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=oiU-ippebC0" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="dtc-fulfillment" data-ch="youtube" style="--tc:#5850EB">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/2_e456PzO94/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">DTC Fulfillment</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">心願劇社</div>
+      <p class="tr-snip"><span class="tr-star">★</span> 【恩情已断，绝情都是你自找的】絕情棄婚！暗戀十三年逆襲追妻，雙重生終獲圓滿姻緣#短劇 #AI短劇 #心願劇社 #中文短劇</p>
+      <div class="tr-foot"><span class="tr-found">found via: dtc fulfillment</span><span class="tr-date">posted 2026-07-05 · 3 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=2_e456PzO94" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="dtc-fulfillment" data-ch="youtube" style="--tc:#5850EB">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/1C9OsjWmSPU/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">DTC Fulfillment</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">PBS Documentaries</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Everything You Know About the American Dream Is Wrong</p>
+      <div class="tr-foot"><span class="tr-found">found via: dtc fulfillment</span><span class="tr-date">posted 2026-07-02 · 5 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=1C9OsjWmSPU" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="dtc-fulfillment" data-ch="instagram" style="--tc:#5850EB">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t39.30808-6/740272001_1049682151345984_7672257107827554021_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=101&amp;ig_cache_key=MzkzNjI4NTA3MDk0MDcxOTI4Nw%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA4MC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=YLUEc1tofd4Q7kNvwEzlCZN&amp;_nc_oc=AdrQczzJKVUuC6kJr1CnAXzyIFkW6CLvSV5VoJ3cSE1HbEwPdxdkWKZIiVUN_Bp6l5o&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;se=7&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=0_maUX66NKO6o8xTF_onIg&amp;_nc_ss=7a3ba&amp;oh=00_AQCwxpMIYVf4OJEKwHAvkauueJbZuVDCLqD7AEB6nV_eRg&amp;oe=6A547709" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">DTC Fulfillment</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">3pshipping</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Selling on multiple platforms doesn't have to mean managing multiple headaches.
+
+From Shopify and Amazon to Walmart, eBay, and Etsy, 3P Shipping helps you keep every order, inventory update, and shipment flowing through one fulfillment par…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #dtcfulfillment</span><span class="tr-date">posted 2026-07-07 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DagfmqsGEi3/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="dtc-fulfillment" data-ch="instagram" style="--tc:#5850EB">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t51.82787-15/736248352_18330483448283179_1719688740428060408_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=103&amp;ig_cache_key=MzkzNjU4NTMzMzIxMTAzOTk4MA%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA4MC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=EiLTHBB_WzYQ7kNvwGuh8rH&amp;_nc_oc=Adp2DOYO7PZfe2Y1AoSSzgQFqAhRkUDZtq_UvuefyPgyf6SVPlQcyZGPpth1kumxesk&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;se=7&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=0_maUX66NKO6o8xTF_onIg&amp;_nc_ss=7a3ba&amp;oh=00_AQAwQuymrxp0ZCkZM3UwO6Kh8v8PWuWq9vLEApziV4G-HQ&amp;oe=6A548596" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">DTC Fulfillment</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">iqfulfillment</div>
+      <p class="tr-snip"><span class="tr-star">★</span> The back-to-school rush is the ultimate test for your e-commerce operations. ⚡️
+
+For bookstores, uniform shops and stationery suppliers, managing sudden order spikes can quickly become overwhelming. Your customers expect a seamless shoppin…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #dtcfulfillment</span><span class="tr-date">posted 2026-07-08 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/Dahj4DuDojs/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="dtc-fulfillment" data-ch="instagram" style="--tc:#5850EB">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t39.30808-6/729468140_122106858897362291_8338969808558352705_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=104&amp;ig_cache_key=MzkyNzU4MjQ2MTE4NjM4MzQxMg%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTAyNC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=TGw5qSeMkSUQ7kNvwFJuk08&amp;_nc_oc=Adqo1igpsFEMPU2uKOxT25Vj24Achp5VNV_bXluEkYOgBVOEduYeRTGqWKJ0KgnR0P4&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;se=7&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=-S_8FvQdfLI5YrVe0Rh5Ew&amp;_nc_ss=7a3ba&amp;oh=00_AQBmAStzbuwJb76QBzNXAM1_D-rVBWjj9YmwpXodzajJ3w&amp;oe=6A548878" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">DTC Fulfillment</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">4dfulfillment</div>
+      <p class="tr-snip"><span class="tr-star">★</span> 📦 One Fulfillment Partner. Unlimited Growth.
+
+Selling across multiple marketplaces shouldn't mean managing multiple fulfillment partners.
+
+With 4D Fulfillment, your orders, inventory, and shipping stay connected whether you're selling on…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #dtcfulfillment</span><span class="tr-date">posted 2026-06-25 · 12 days ago</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DaBk3BxEZ40/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="instant-quotation">
+      <h2 style="--tc:#0E9C9C">Instant Shipping Quotation <span>7</span></h2>
+      <div class="tr-grid">
+        <article class="tr-card" data-topic="instant-quotation" data-ch="youtube" style="--tc:#0E9C9C">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/Mw58aMOqbHg/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Instant Shipping Quotation</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">国漫星球Planet</div>
+      <p class="tr-snip"><span class="tr-star">★</span> 【新番上線】一口氣看完🔥我家後院是修仙秘境，一口靈蔬逆齡變美！兩界仙尊豪門，為我種的菜瘋狂！《超市後院穿梭古今》#漫剧 #multisub #anime</p>
+      <div class="tr-foot"><span class="tr-found">found via: instant freight quote</span><span class="tr-date">posted 2026-06-30 · 8 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=Mw58aMOqbHg" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="instant-quotation" data-ch="youtube" style="--tc:#0E9C9C">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/4LnQju93Fko/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Instant Shipping Quotation</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">椰椰动漫社</div>
+      <p class="tr-snip"><span class="tr-star">★</span> MULTI SUB💥新番💥後院大門通異世，普通蔬菜變靈藥，兩界大佬搶瘋了！《超市後院穿梭古今》~一口气看全集 #漫剧 #anime</p>
+      <div class="tr-foot"><span class="tr-found">found via: instant freight quote</span><span class="tr-date">posted 2026-06-30 · 8 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=4LnQju93Fko" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="instant-quotation" data-ch="youtube" style="--tc:#0E9C9C">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/Wa_-661wCVk/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Instant Shipping Quotation</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">Active Rahul</div>
+      <p class="tr-snip"><span class="tr-star">★</span> How To Unlock Facebook Content Monetisation | Facebook Monetize Kaise Kare | Facebook Monetisation</p>
+      <div class="tr-foot"><span class="tr-found">found via: instant freight quote</span><span class="tr-date">posted 2026-06-27 · 11 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=Wa_-661wCVk" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="instant-quotation" data-ch="instagram" style="--tc:#0E9C9C">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t39.30808-6/742198133_1015361571250444_3050394983721477023_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=106&amp;ig_cache_key=MzkzNjg2MDI1NTcxMjQwODQ4Mw%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTE1Mi5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=n8K0Y3zCkCAQ7kNvwGaPMys&amp;_nc_oc=AdogL80lOqU1eyhlYlRom8elf1GuaFkaErw-6sbXMG9RKMbJV5di1z3972eUa_XYuEKMz1S_05XBpRYYLhTikS95&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;se=7&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=I6FDbptyuUqn_kugq1rNlA&amp;_nc_ss=7a3ba&amp;oh=00_AQBCHTM0xA3w9HzLsNALXP8p9TtqbczWkN4l4HpOQplmxQ&amp;oe=6A547913" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Instant Shipping Quotation</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">ship2arm</div>
+      <p class="tr-snip"><span class="tr-star">★</span> 𝐋𝐨𝐬 𝐀𝐧𝐠𝐞𝐥𝐞𝐬 ➜ 𝐘𝐞𝐫𝐞𝐯𝐚𝐧
+Բեռնափոխադրում՝ առանց բարդ պայմանների և անհասկանալի հաշվարկների։
+
+✔️ 𝟏 փաունդ = $𝟑.𝟓
+✔️ Անվճար տուփեր մեր բոլոր ընդունման կետերում
+✔️ Հաշվարկում ենք միայն իրական քաշը
+✔️ Առաքման միջին ժամկետ՝ 7–14…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #freightrates</span><span class="tr-date">posted 2026-07-08 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DaiiYtQF3Oj/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="instant-quotation" data-ch="instagram" style="--tc:#0E9C9C">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t51.82787-15/729736398_18053358998774511_5050667554657667798_n.webp?stp=dst-webp_s1080x1080_sh2.08&amp;_nc_cat=111&amp;ig_cache_key=MzkzNjkzMDQ3NTM1MDIwMDEwOQ%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTQ0MC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=ORyTOo5oH7gQ7kNvwFRAaSi&amp;_nc_oc=AdocgkHHH-p5Y2Bcj3v8RiK4rIyVpDfY7QUBmLC7rtMJ83pBabUgkZRXFnETnNEpalgRljKpDJ8Yp6BXwo1TKDZE&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=bK142L7wNQMXjxux9Wy_-w&amp;_nc_ss=7a3ba&amp;oh=00_AQDKkxfyKAHVHND4AXy5tL_ddwEoCNmQXIAqTEVtp1XsFg&amp;oe=6A546324" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Instant Shipping Quotation</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">cargologisticsarmenia</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Ներմուծում ենք `
+🔹Էլեկտրոմոբիլներ 
+🔹Սարքավորումներներ եւ հոսքագծեր
+🔹Ապրանքներ
+Արտահանում ենք `
+🔹ՌԴ, Ամն, Եվրոմիության երկրներ, ԱՄԷ
+
+#yerevan #armenia #logistics #china🇨🇳 #vibes</p>
+      <div class="tr-foot"><span class="tr-found">found via: #freightrates</span><span class="tr-date">posted 2026-07-08 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DaiyWiYqI8t/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="instant-quotation" data-ch="instagram" style="--tc:#0E9C9C">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t39.30808-6/730381623_122185753994859892_6368488945145653585_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=110&amp;ig_cache_key=MzkzNjQ5NTE4NzI3NDEwMDMwMQ%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA4MC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=-6SmlQqNjkoQ7kNvwEQZdcz&amp;_nc_oc=AdpmZv8TTcB_Q5-qS7iP6ZK0Ea7B0jiLwLbC9gh4yAgO4eX-7TP0T7cwC5WiHLnB3a7bcq9VM9_09ompoYtmt6R6&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;se=7&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=RqQTT6a6edSsMDBw0F77Fg&amp;_nc_ss=7a3ba&amp;oh=00_AQBBXJorQmYzPwGXDgSY4A-gB4uzj9NJWDrEGXy9jowwrw&amp;oe=6A548C53" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Instant Shipping Quotation</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">valourtrading</div>
+      <p class="tr-snip"><span class="tr-star">★</span> 🇹🇷 
+
+Küresel tarımsal emtia ticaretinde fiyatlar yalnızca arz, talep ve üretim maliyetleriyle belirlenmez. Navlun maliyetleri ve lojistik endeksleri de uluslararası ticaretin yönünü etkileyen en önemli göstergeler arasında yer alır.
+
+Bal…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #freightrates</span><span class="tr-date">posted 2026-07-08 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DahPYQxge5N/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="instant-quotation" data-ch="facebook" style="--tc:#0E9C9C">
+    <div class="tr-visual tile" data-type="TEXT"><span class="tr-typebadge">TEXT</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Instant Shipping Quotation</span><span class="tr-chip" style="background:#1877F2">Facebook</span></div>
+      <div class="tr-acct">unknown</div>
+      <p class="tr-snip"><span class="tr-star">★</span> </p>
+      <div class="tr-foot"><span class="tr-found">found via: #freightrates</span><span class="tr-date">posted date n/a</span></div>
+      <a class="tr-open" href="https://www.facebook.com/hashtag/oceanfreight" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="amazon-fba">
+      <h2 style="--tc:#FA5959">Amazon FBA Shipping &amp; Fulfillment <span>6</span></h2>
+      <div class="tr-grid">
+        <article class="tr-card" data-topic="amazon-fba" data-ch="youtube" style="--tc:#FA5959">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/ETcqqzR-QWU/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon FBA Shipping &amp; Fulfillment</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">PC Tech Talk</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Sale! July 2026 🔥 PC Build Components!</p>
+      <div class="tr-foot"><span class="tr-found">found via: amazon fba fees</span><span class="tr-date">posted 2026-07-04 · 3 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=ETcqqzR-QWU" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-fba" data-ch="youtube" style="--tc:#FA5959">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/q1EOJvPoTj0/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon FBA Shipping &amp; Fulfillment</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">IE Tech</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Amazon Prime Day Deals 2026! 🚀 Up to 45% Off Echo &amp; Fire TV Devices!</p>
+      <div class="tr-foot"><span class="tr-found">found via: amazon fba fees</span><span class="tr-date">posted 2026-07-04 · 3 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=q1EOJvPoTj0" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-fba" data-ch="youtube" style="--tc:#FA5959">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/Av7BW288eaI/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon FBA Shipping &amp; Fulfillment</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">Travis Marziani</div>
+      <p class="tr-snip"><span class="tr-star">★</span> If You've Been Watching Amazon FBA Videos for 6 Months Without Starting, Watch This</p>
+      <div class="tr-foot"><span class="tr-found">found via: amazon fba fees</span><span class="tr-date">posted 2026-06-29 · 8 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=Av7BW288eaI" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-fba" data-ch="instagram" style="--tc:#FA5959">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t51.82787-15/742461919_18602368102007905_677122908378950412_n.jpg?stp=dst-jpegr_e35_p1080x1080_tt6&amp;_nc_cat=100&amp;ig_cache_key=MzkzNjc2Mjg0Njk2MjYxMDI4OQ%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMzg3NS5oZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=oLdJUuGnCDwQ7kNvwHKSKZw&amp;_nc_oc=AdpsIw-XXtGTqQu9PAXogs9kCd71dxssTtFsLHhlKOVr7mjbqNzx9OlU9Esbu2r6Zdc&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;se=-1&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=655lutVi3XtNiaFXCPtNiA&amp;_nc_ss=7a3ba&amp;oh=00_AQCIRI29FizqffKhusmaVPa6bVHEXPPT8BJjl3BFh1C60g&amp;oe=6A548E70" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon FBA Shipping &amp; Fulfillment</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">ffcc1985</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Hey FBA!
+Stop by and see us at the FBA Summer Conference today &amp; tomorrow in Orlando 🤩
+
+#ffcc #fba #marchingband #colorguard #winterguard</p>
+      <div class="tr-foot"><span class="tr-found">found via: #amazonfba</span><span class="tr-date">posted 2026-07-08 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DaiMPOSKXBx/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-fba" data-ch="instagram" style="--tc:#FA5959">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t51.82787-15/736368790_18594395395033500_3151246468204100676_n.jpg?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&amp;_nc_cat=100&amp;ig_cache_key=MzkzNjg5NzYyMjIzMjQ3Mzg1Mw%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuNDA5Ni5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=qPsG_UAr0nUQ7kNvwG0q3os&amp;_nc_oc=AdpMWOmglqNAownEnYFMZcFTscBHsIasQoOVeFOdYeEm0JId0T9j4rS2T2whNoUmqa4&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=EQJnKOTcWxCIyfxAYuRfeQ&amp;_nc_ss=7a3ba&amp;oh=00_AQAAPE2HVycB3iG6CjLB2ttJH122yk60wL1qW6Qpjje8VA&amp;oe=6A54915B" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='CAROUSEL';this.remove();">
+         <span class="tr-typebadge">CAROUSEL</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon FBA Shipping &amp; Fulfillment</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">sonu_kingrani</div>
+      <p class="tr-snip"><span class="tr-star">★</span> A memorable evening at the Pakistan Business Excellence Summit 2026 by @ceomindspakistan. Grateful for the opportunity to connect with inspiring entrepreneurs, founders, and business leaders, and truly honored to receive the Young CEO Exce…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #amazonfba</span><span class="tr-date">posted 2026-07-08 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DairjUACF1Q/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-fba" data-ch="instagram" style="--tc:#FA5959">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t51.82787-15/731104738_18107798788968245_1754031613204375797_n.jpg?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&amp;_nc_cat=100&amp;ig_cache_key=MzkzNjI3MzE1NTAwMTg4MTM4Mw%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTI1NC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=7FakVWPcx4oQ7kNvwHDvv84&amp;_nc_oc=Adouyqk6BaM7GrfIk47-4AoItlmp9ypNj_pzzLJqQD168k7XtrLJPdTJRNpr48UgIRU&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=DtgQwmhiTaDZIQwhpst5iw&amp;_nc_ss=7a3ba&amp;oh=00_AQB-4yBvsNY-5rm2WDP5tuTxTfVcNJJ4QQWAEdCmLAackQ&amp;oe=6A54948F" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon FBA Shipping &amp; Fulfillment</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">mofbalove</div>
+      <p class="tr-snip"><span class="tr-star">★</span> I stopped lugging my boxes to UPS a couple weeks ago and I’m not mad about it one bit. If you haven’t started having your shipments picked up, start now! 👊🏻🙌🏻 #fbashipping #fbaseller #amazonsellers</p>
+      <div class="tr-foot"><span class="tr-found">found via: #amazonfba</span><span class="tr-date">posted 2026-07-07 · today</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/Dagc5RGyxMn/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="amazon-1p-recovery">
+      <h2 style="--tc:#FFC118">Amazon Vendor / 1P Revenue Recovery <span>6</span></h2>
+      <div class="tr-grid">
+        <article class="tr-card" data-topic="amazon-1p-recovery" data-ch="youtube" style="--tc:#FFC118">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/oeH0fOSJuX8/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon Vendor / 1P Revenue Recovery</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">Dhruv Rathee</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Ram Mandir Scam is WORSE Than You Think | Dhruv Rathee</p>
+      <div class="tr-foot"><span class="tr-found">found via: amazon vendor central</span><span class="tr-date">posted 2026-07-04 · 3 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=oeH0fOSJuX8" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-1p-recovery" data-ch="youtube" style="--tc:#FFC118">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/aTMJo4tgGeI/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon Vendor / 1P Revenue Recovery</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">Professor Gerdes Explains 🇺🇦 </div>
+      <p class="tr-snip"><span class="tr-star">★</span> Peskov Just Called It “War.” Mobilization Next?</p>
+      <div class="tr-foot"><span class="tr-found">found via: amazon vendor central</span><span class="tr-date">posted 2026-07-06 · 1 day ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=aTMJo4tgGeI" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-1p-recovery" data-ch="youtube" style="--tc:#FFC118">
+    <div class="tr-visual"><img src="https://i.ytimg.com/vi/jqj2iwfsCe0/maxresdefault.jpg" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='VIDEO';this.remove();">
+         <span class="tr-typebadge">VIDEO</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon Vendor / 1P Revenue Recovery</span><span class="tr-chip" style="background:#FF0000">YouTube</span></div>
+      <div class="tr-acct">Money Pit Matt</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Lidl Just Dropped The “CHEAPEST” Air Conditioner In The UK 😲</p>
+      <div class="tr-foot"><span class="tr-found">found via: amazon vendor central</span><span class="tr-date">posted 2026-06-25 · 12 days ago</span></div>
+      <a class="tr-open" href="https://www.youtube.com/watch?v=jqj2iwfsCe0" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-1p-recovery" data-ch="instagram" style="--tc:#FFC118">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t51.82787-15/730310865_18323851030272482_6251592309987073859_n.jpg?stp=dst-jpg_e35_s1080x1080_sh2.08_tt6&amp;_nc_cat=100&amp;ig_cache_key=MzkzMTk4MDkzODY4NjYyNTIwOQ%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTI1NC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=VrxwHEM8ufMQ7kNvwFeLBXx&amp;_nc_oc=AdrZL1uzivUEmE5hqHtLZHrFnyR9mNL1DqrnUJqI6P7rsH9UlBCZ843omFSBV5iCHUk&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=AK-U5bHPXeS3I3vmBNtZRg&amp;_nc_ss=7a3ba&amp;oh=00_AQCFtu-G02ChFyyb1go6UV4JwymsMG4eMIh-W_hQRpMhzg&amp;oe=6A5482DC" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon Vendor / 1P Revenue Recovery</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">graceandmaggieplaymats</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Thankfully, we’ve only had to do this a handful of times. 💛 But we know so many small businesses who are hit with chargebacks far too often. It’s incredibly frustrating, and at the end of the day, it’s taking products and leaving small bu…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #amazonvendor</span><span class="tr-date">posted 2026-07-01 · 6 days ago</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DaRM9TKBfW5/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-1p-recovery" data-ch="instagram" style="--tc:#FFC118">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t51.82787-15/735272407_17887155342604335_239938004982840565_n.jpg?stp=dst-jpg_e35_p1080x1080_sh2.08_tt6&amp;_nc_cat=110&amp;ig_cache_key=MzkzNTIzNzQ2OTc2NjMzNDA2Mg%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkNBUk9VU0VMX0lURU0ueHBpZHMuMzI3NC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=A18Fc6vlae0Q7kNvwG94_fj&amp;_nc_oc=AdrAqfLW3aG1Y7vQku4WTrRhi6-yOFodHJlLppJmJIyvwjkSfGDLQl8iKj4ZoPsiRgE&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=AK-U5bHPXeS3I3vmBNtZRg&amp;_nc_ss=7a3ba&amp;oh=00_AQBedzE8w2SqWiz_FdhmFWV7wMDGN3OnkvWKiLUn-A_uqw&amp;oe=6A5465AF" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='CAROUSEL';this.remove();">
+         <span class="tr-typebadge">CAROUSEL</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon Vendor / 1P Revenue Recovery</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">africatech.academy</div>
+      <p class="tr-snip"><span class="tr-star">★</span> Behind every great customer experience is a strong risk management process.
+
+We’re proud to have Taiwo Olumuyiwa Adeeko, VP, Global acquiring/Country Manager, Nigeria at Payaza Africa, as one of our facilitators for Cohort 1. @ejiremitaiwo…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #amazonvendor</span><span class="tr-date">posted 2026-07-06 · 2 days ago</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/Dac0WPkjH8e/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article><article class="tr-card" data-topic="amazon-1p-recovery" data-ch="instagram" style="--tc:#FFC118">
+    <div class="tr-visual"><img src="https://scontent-cph2-1.cdninstagram.com/v/t39.30808-6/736095469_122115344085193945_686885335468256568_n.jpg?stp=dst-jpg_e35_tt6&amp;_nc_cat=111&amp;ig_cache_key=MzkzNTM0NzY4MTkzNzY5MTA5Mg%3D%3D.3-ccb7-5&amp;ccb=7-5&amp;_nc_sid=58cdad&amp;efg=eyJ2ZW5jb2RlX3RhZyI6IkZFRUQueHBpZHMuMTA4MC5zZHIucmVndWxhcl9waG90by5DMyJ9&amp;_nc_ohc=ZmMGOZ8izvEQ7kNvwH7C10A&amp;_nc_oc=AdppC4hRIjHvZuwXhN1ahTdR_WmpIOND711TzIunnxufftudQOAIWRh2df4BLammJgk&amp;_nc_ad=z-m&amp;_nc_cid=0&amp;_nc_zt=23&amp;se=7&amp;_nc_ht=scontent-cph2-1.cdninstagram.com&amp;_nc_gid=AK-U5bHPXeS3I3vmBNtZRg&amp;_nc_ss=7a3ba&amp;oh=00_AQDUXt7OEVJuXURiedKYI9fbNVXWKPpC9Bz1fYrTFJQK6Q&amp;oe=6A548EEF" alt="" loading="lazy" referrerpolicy="no-referrer"
+         onerror="this.parentNode.classList.add('tile');this.parentNode.dataset.type='IMAGE';this.remove();">
+         <span class="tr-typebadge">IMAGE</span></div>
+    <div class="tr-body">
+      <div class="tr-row"><span class="tr-eyebrow">Amazon Vendor / 1P Revenue Recovery</span><span class="tr-chip" style="background:#C13584">Instagram</span></div>
+      <div class="tr-acct">disputifier</div>
+      <p class="tr-snip"><span class="tr-star">★</span> ⭐⭐⭐⭐⭐ &quot;One of, if not the best app for #Shopify.&quot;
+ 
+ &quot;Their services are mandatory to operate a good online business and their online support is instant and amazing. I would give it 100 stars if I could.&quot; — Verified Shopify #Merchant
+ 
+ An…</p>
+      <div class="tr-foot"><span class="tr-found">found via: #amazonvendor</span><span class="tr-date">posted 2026-07-06 · 1 day ago</span></div>
+      <a class="tr-open" href="https://www.instagram.com/p/DadKd3JjZHU/" target="_blank" rel="noopener">Open post →</a>
+    </div>
+  </article>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="supply-chain-trends">
+      <h2 style="--tc:#5850EB">Ecommerce B2B &amp; DTC Supply-Chain Trends <span>0</span></h2>
+      <div class="tr-grid">
+        <div class="tr-gap">No public post surfaced for this topic this run.</div>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="new-product-launch">
+      <h2 style="--tc:#0E9C9C">New Product Launch <span>0</span></h2>
+      <div class="tr-grid">
+        <div class="tr-gap">No public post surfaced for this topic this run.</div>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="new-feature-launch">
+      <h2 style="--tc:#FA5959">New Feature Launch <span>0</span></h2>
+      <div class="tr-grid">
+        <div class="tr-gap">No public post surfaced for this topic this run.</div>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="new-website-design">
+      <h2 style="--tc:#5850EB">New Website Design <span>0</span></h2>
+      <div class="tr-grid">
+        <div class="tr-gap">No public post surfaced for this topic this run.</div>
+      </div>
+    </section>
+    <section class="tr-topic" data-topic="new-website-launch">
+      <h2 style="--tc:#0E9C9C">New Website Launch <span>0</span></h2>
+      <div class="tr-grid">
+        <div class="tr-gap">No public post surfaced for this topic this run.</div>
+      </div>
+    </section></main>
+<footer>Ranked by public engagement (likes · comments · shares · views) — impressions are private and never shown.<br>Auto-generated daily via Apify · Forceget · Supply Chain Logistics</footer>
+<script>
+  var topic='all', chan='all';
+  function apply(){
+    document.querySelectorAll('.tr-card').forEach(function(c){
+      var ok=(topic==='all'||c.dataset.topic===topic)&&(chan==='all'||c.dataset.ch===chan);
+      c.style.display=ok?'':'none';
+    });
+    document.querySelectorAll('.tr-topic').forEach(function(s){
+      s.style.display=(topic==='all'||s.dataset.topic===topic)?'':'none';
+    });
+  }
+  document.querySelectorAll('.tr-pill').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('.tr-pill').forEach(function(x){x.classList.remove('on')});b.classList.add('on');topic=b.dataset.topic;apply();
+    if(topic!=='all'){var el=document.querySelector('.tr-topic[data-topic="'+topic+'"]');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});}
+  }});
+  document.querySelectorAll('.tr-cpill').forEach(function(b){b.onclick=function(){
+    document.querySelectorAll('.tr-cpill').forEach(function(x){x.classList.remove('on')});b.classList.add('on');chan=b.dataset.ch;apply();
+  }});
+</script></body></html>
