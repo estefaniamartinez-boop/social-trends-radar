@@ -36,6 +36,7 @@ jobs:
           ACTOR_YOUTUBE: ${{ secrets.ACTOR_YOUTUBE }}
           TOP_N: '3'
           MAX_AGE_DAYS: '14'
+          SITE_URL: 'https://estefaniamartinez-boop.github.io/social-trends-radar'
         run: npm start
 
       - name: Publish dashboard to GitHub Pages

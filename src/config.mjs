@@ -13,6 +13,9 @@ export const TOP_N = Number(process.env.TOP_N || 5);          // top posts kept 
 export const MAX_AGE_DAYS = Number(process.env.MAX_AGE_DAYS || 30); // freshness window
 export const APIFY_TOKEN = process.env.APIFY_TOKEN;
 export const ACTOR_TIMEOUT_SECS = Number(process.env.ACTOR_TIMEOUT_SECS || 300);
+// Live Pages base URL — lets each run read back prior days' archived JSON so the
+// Research Day selector keeps every past day browsable. Set in the workflow env.
+export const SITE_URL = (process.env.SITE_URL || '').replace(/\/$/, '');
 
 // ---- Small defensive helpers (actor outputs are inconsistent) --------------
 const num = (v) => (typeof v === 'number' ? v : parseInt(String(v ?? '').replace(/[^\d]/g, ''), 10) || 0);
