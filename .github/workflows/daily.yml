@@ -28,15 +28,13 @@ jobs:
 
       - name: Run the radar
         env:
-          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          # Optional actor overrides (only set if you swap an actor):
-          ACTOR_LINKEDIN: ${{ secrets.ACTOR_LINKEDIN }}
-          ACTOR_INSTAGRAM: ${{ secrets.ACTOR_INSTAGRAM }}
-          ACTOR_FACEBOOK: ${{ secrets.ACTOR_FACEBOOK }}
-          ACTOR_YOUTUBE: ${{ secrets.ACTOR_YOUTUBE }}
-          TOP_N: '3'
-          MAX_AGE_DAYS: '14'
+          TOP_N: '4'
           SITE_URL: 'https://estefaniamartinez-boop.github.io/social-trends-radar'
+          # Optional & FREE — only set these two repo secrets if DuckDuckGo ever
+          # gets rate-limited on GitHub's runners; otherwise leave them unset and
+          # the free keyless search is used. No payment either way.
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
         run: npm start
 
       - name: Publish dashboard to GitHub Pages

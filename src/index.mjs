@@ -1,5 +1,5 @@
 import { join } from 'node:path';
-import { APIFY_TOKEN, SITE_URL, topics, channelKeys } from './config.mjs';
+import { SITE_URL, topics, channelKeys } from './config.mjs';
 import { collect } from './collect.mjs';
 import { rank } from './rank.mjs';
 import { buildDashboard } from './dashboard.mjs';
@@ -33,23 +33,28 @@ async function fetchArchive(currentDate) {
 }
 
 async function main() {
-  if (!APIFY_TOKEN) {
-    console.error('APIFY_TOKEN is not set. Add it as a GitHub Actions secret (or export it locally).');
-    process.exit(1);
-  }
-
   console.log(`Social Trend Radar — run ${date}`);
   const finalPosts = [];
 
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   for (const topic of topics) {
     console.log(`\n■ Topic: ${topic.label}`);
     for (const ch of channelKeys) {
       const raw = await collect(ch, topic);
       finalPosts.push(...rank(raw)); // top N per topic per channel
+      await sleep(2000); // be gentle on the free search endpoint (avoid throttling)
     }
   }
 
-  console.log(`\nCollected ${finalPosts.length} posts today. Fetching archive ...`);
+  console.log(`\nCollected ${finalPosts.length} posts today.`);
+  // Guard: never overwrite a good published dashboard with an empty run
+  // (e.g. if search is temporarily blocked). Keep the last good version.
+  if (finalPosts.length === 0) {
+    console.error('0 posts collected — keeping the last good published dashboard (not overwriting).');
+    process.exit(0);
+  }
+
+  console.log('Fetching archive ...');
   const archive = await fetchArchive(date);
   const daysData = [{ date, posts: finalPosts }, ...archive].sort((a, b) => b.date.localeCompare(a.date));
 

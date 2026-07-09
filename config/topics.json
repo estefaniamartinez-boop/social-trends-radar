@@ -1,86 +1,86 @@
 {
-  "_comment": "The 9 topics Forceget tracks. keywords[0] is the primary search phrase the LinkedIn/YouTube actors use; hashtags drive Instagram/Facebook. Use SOCIAL-NATIVE phrases (what people actually write in posts: 'new website launch', 'our new website is live', 'we just shipped'), NOT SEO/article keywords. 'group' and 'color' drive the dashboard grouping + topic eyebrow.",
+  "_comment": "9 topics. 'query' is the free web-search phrase; the platform is appended at runtime as 'query site:linkedin.com' etc. Edit 'query' freely — that's what drives what gets found. keywords/hashtags are kept for reference. group/color drive the dashboard.",
   "topics": [
     {
       "id": "dtc-fulfillment",
       "label": "DTC Fulfillment",
       "group": "Core",
       "color": "#5850EB",
+      "query": "DTC fulfillment 3PL ecommerce",
       "keywords": ["dtc fulfillment", "3PL fulfillment", "outsourced fulfillment"],
-      "hashtags": ["dtcfulfillment", "ecommercefulfillment", "3pl", "orderfulfillment"],
-      "accounts": []
+      "hashtags": ["dtcfulfillment", "ecommercefulfillment", "3pl"]
     },
     {
       "id": "instant-quotation",
       "label": "Instant Shipping Quotation",
       "group": "Core",
       "color": "#0E9C9C",
+      "query": "instant freight quote real-time ocean rates",
       "keywords": ["instant freight quote", "real-time freight rates", "ocean freight rates"],
-      "hashtags": ["freightrates", "oceanfreight", "freightforwarding", "logistics"],
-      "accounts": []
+      "hashtags": ["freightrates", "oceanfreight", "freightforwarding"]
     },
     {
       "id": "amazon-fba",
       "label": "Amazon FBA Shipping & Fulfillment",
       "group": "Core",
       "color": "#FA5959",
-      "keywords": ["amazon fba fees", "fba surcharge", "amazon fba"],
-      "hashtags": ["amazonfba", "fba", "amazonseller", "fbaseller"],
-      "accounts": []
+      "query": "Amazon FBA AWD fees shipping",
+      "keywords": ["amazon fba fees", "fba awd", "fba surcharge"],
+      "hashtags": ["amazonfba", "fba", "amazonseller"]
     },
     {
       "id": "amazon-1p-recovery",
       "label": "Amazon Vendor / 1P Revenue Recovery",
       "group": "Core",
       "color": "#FFC118",
+      "query": "Amazon vendor central chargeback shortage recovery",
       "keywords": ["amazon vendor central", "chargeback recovery", "amazon shortage claim"],
-      "hashtags": ["amazonvendor", "vendorcentral", "amazon1p", "chargebacks"],
-      "accounts": []
+      "hashtags": ["amazonvendor", "vendorcentral", "amazon1p"]
     },
     {
       "id": "supply-chain-trends",
       "label": "Ecommerce B2B & DTC Supply-Chain Trends",
       "group": "Core",
       "color": "#5850EB",
+      "query": "de minimis nearshoring tariffs supply chain",
       "keywords": ["de minimis", "nearshoring", "supply chain tariffs"],
-      "hashtags": ["nearshoring", "supplychain", "tariffs", "deminimis"],
-      "accounts": []
+      "hashtags": ["nearshoring", "supplychain", "tariffs"]
     },
     {
       "id": "new-product-launch",
       "label": "New Product Launch",
       "group": "Launches & Web",
       "color": "#0E9C9C",
-      "keywords": ["new product launch", "we're excited to announce", "just launched"],
-      "hashtags": ["productlaunch", "newproduct", "launchday", "nowavailable"],
-      "accounts": []
+      "query": "new product launch announcement",
+      "keywords": ["new product launch", "just launched", "introducing"],
+      "hashtags": ["productlaunch", "newproduct", "launchday"]
     },
     {
       "id": "new-feature-launch",
       "label": "New Feature Launch",
       "group": "Launches & Web",
       "color": "#FA5959",
+      "query": "new feature launch product update",
       "keywords": ["new feature launch", "we just shipped", "product update"],
-      "hashtags": ["productupdate", "featurelaunch", "newfeature", "buildinpublic"],
-      "accounts": []
+      "hashtags": ["productupdate", "featurelaunch", "newfeature"]
     },
     {
       "id": "new-website-design",
       "label": "New Website Design",
       "group": "Launches & Web",
       "color": "#5850EB",
-      "keywords": ["we redesigned our website", "website redesign", "new website design"],
-      "hashtags": ["websiteredesign", "webdesign", "uiux", "webdesigntrends"],
-      "accounts": []
+      "query": "new website design redesign reveal",
+      "keywords": ["website redesign", "new website design", "we redesigned our website"],
+      "hashtags": ["websiteredesign", "webdesign", "webdesigntrends"]
     },
     {
       "id": "new-website-launch",
       "label": "New Website Launch",
       "group": "Launches & Web",
       "color": "#0E9C9C",
+      "query": "new website launch our new website is live",
       "keywords": ["new website launch", "our new website is live", "check out our new website"],
-      "hashtags": ["newwebsite", "websitelaunch", "goinglive", "wearelive"],
-      "accounts": []
+      "hashtags": ["newwebsite", "websitelaunch", "goinglive"]
     }
   ]
 }
