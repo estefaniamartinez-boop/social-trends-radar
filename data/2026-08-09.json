@@ -1,0 +1,69 @@
+{
+  "date": "2026-08-09",
+  "posts": [
+    {
+      "url": "https://www.instagram.com/reel/DbaB0ZoP8w3",
+      "channel": "instagram",
+      "channelLabel": "Instagram",
+      "topicId": "dtc-fulfillment",
+      "topicLabel": "DTC Fulfillment",
+      "author": "Instagram",
+      "text": "DTC Fulfillment",
+      "thumbnailUrl": null,
+      "postType": "image",
+      "foundVia": "DTC fulfillment 3PL ecommerce site:instagram.com",
+      "publishedAt": null,
+      "metrics": {},
+      "engagement": 0,
+      "searchRank": 1
+    },
+    {
+      "url": "https://www.instagram.com/reel/DbRFzxFMYRL",
+      "channel": "instagram",
+      "channelLabel": "Instagram",
+      "topicId": "dtc-fulfillment",
+      "topicLabel": "DTC Fulfillment",
+      "author": "Instagram",
+      "text": "DTC Fulfillment",
+      "thumbnailUrl": null,
+      "postType": "image",
+      "foundVia": "DTC fulfillment 3PL ecommerce site:instagram.com",
+      "publishedAt": null,
+      "metrics": {},
+      "engagement": 0,
+      "searchRank": 2
+    },
+    {
+      "url": "https://www.instagram.com/reel/DZsWMgiDyCy",
+      "channel": "instagram",
+      "channelLabel": "Instagram",
+      "topicId": "dtc-fulfillment",
+      "topicLabel": "DTC Fulfillment",
+      "author": "Instagram",
+      "text": "DTC Fulfillment",
+      "thumbnailUrl": null,
+      "postType": "image",
+      "foundVia": "DTC fulfillment 3PL ecommerce site:instagram.com",
+      "publishedAt": null,
+      "metrics": {},
+      "engagement": 0,
+      "searchRank": 3
+    },
+    {
+      "url": "https://www.instagram.com/reel/DbR124dv_Ll",
+      "channel": "instagram",
+      "channelLabel": "Instagram",
+      "topicId": "dtc-fulfillment",
+      "topicLabel": "DTC Fulfillment",
+      "author": "Instagram",
+      "text": "DTC Fulfillment",
+      "thumbnailUrl": null,
+      "postType": "image",
+      "foundVia": "DTC fulfillment 3PL ecommerce site:instagram.com",
+      "publishedAt": null,
+      "metrics": {},
+      "engagement": 0,
+      "searchRank": 4
+    }
+  ]
+}
